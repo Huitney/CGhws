@@ -46,7 +46,7 @@ function init () {
 
 	window.addEventListener('resize', onWindowResize, false);
 	///////////////////////////////////////////////////////////////
-	var cubeGeometry = new THREE.BoxGeometry (3,1,2);
+	var cubeGeometry = new THREE.CylinderGeometry (2, 2, 5, 32);
 	var cubeMaterial = new THREE.MeshNormalMaterial();
 	cube = new THREE.Mesh (cubeGeometry, cubeMaterial);
 	scene.add (cube);
