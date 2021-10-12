@@ -3,4 +3,4 @@
 <a href="http://huitney.github.io/CGhws/index.html">HW首頁</a>
 <a href="mailto:u10706125@ms.ttu.edu.tw">聯絡信箱</a><br>
 * <a href="https://huitney.github.io/CGhws/hw0.html"><img src="https://i.imgur.com/0zrdapA.png" style="width:15px;height:15px;">HW0</a><br>
-* <a href="https://huitney.github.io/CGhws/hw0.html"><img src="https://i.imgur.com/0zrdapA.png" style="width:15px;height:15px;">HW1</a><br>
+* <a href="https://huitney.github.io/CGhws/hw1.html"><img src="https://i.imgur.com/0zrdapA.png" style="width:15px;height:15px;">HW1</a><br>
