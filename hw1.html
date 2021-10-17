@@ -14,10 +14,17 @@
 <body style='overflow:hidden'> 
 
 <div id='heading'>
-	<h3 style = "color:red">hw1 - stop when 60s</h3>
+	<br><font size="4" style = "color:red">hw1 - stop when </font>
+	<font size="4" style = "color:red" id="WhenToEnd">60s</font><br>
 	<button id="clockStart">start</button>
-	<br><p id="msg"></p>
+	<button id="clockReset">reset</button>
+	<button id="addTens">+10</button><br>
+	<button id="moveStyle">change move style</button>
+	<br><p id="msg">0s</p>
 </div>
+
+<audio id="timeUp" style="display:none" muted>
+<source src="https://huitney.github.io/CGhws/sound/clock_ring.wav" type='audio/wav'></audio>
 
 <script src="https://threejs.org/build/three.min.js"></script>
 <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
@@ -28,17 +35,56 @@ javascript:(function(){var script=document.createElement('script');script.onload
 // my script
 
 var camera, scene, renderer;
-var clock = new THREE.Clock();
-var clockStart = false;
+var clockStart = false, moveStyle = true;
 var watch = new THREE.Group();
+var timeEnd = 60, count = 0;
+var timeUp;
 
 $("#clockStart").click(function() {
 	clockStart = !clockStart;
 	if(clockStart){
 		$('#clockStart').text('pause');
-		setTimeout (timing, 0);
+		if(moveStyle)
+			setTimeout (timing1, 0);
+		else 
+			setTimeout (timing2, 0);
+
 	}
 	else $('#clockStart').text('start');
+});
+
+$("#addTens").click(function() {
+	if(count !== 0){
+		clockStart = false;
+		timeEnd = 70;
+		count = 0;
+		$('#msg').text('0s');
+		$('#WhenToEnd').text(timeEnd + 's');
+		$('#clockStart').text('start');
+		watch.children[0].rotation.z = -Math.PI/3;
+		watch.children[1].rotation.z = -Math.PI/3;
+	}
+	else{
+		timeEnd += 10;
+		$('#WhenToEnd').text(timeEnd + 's');
+		watch.children[0].rotation.z -= Math.PI/3;
+		watch.children[1].rotation.z -= Math.PI/3;
+	}
+});
+
+$("#clockReset").click(function() {
+	clockStart = false;
+	timeEnd = 60;
+	count = 0;
+	$('#msg').text('0s');
+	$('#WhenToEnd').text(timeEnd + 's');
+	$('#clockStart').text('start');
+	watch.children[0].rotation.z = 0;
+	watch.children[1].rotation.z = 0;
+});
+
+$("#moveStyle").click(function() {
+	moveStyle =! moveStyle;
 });
 
 init();
@@ -54,9 +100,9 @@ function init() {
 	window.addEventListener('resize', onWindowResize, false);
 	document.body.appendChild(renderer.domElement);
 	let controls = new THREE.OrbitControls(camera, renderer.domElement);
-	
-	var light = new THREE.PointLight( 0xffffff, 1, 1000 );
-	scene.add( light );
+		
+	timeUp = document.getElementById('timeUp');
+	timeUp.muted = false;
 	
 	buildClock();
 	scene.add(watch);
@@ -68,9 +114,7 @@ function onWindowResize() {
 	renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function animate() {
-	var dt = clock.getDelta();
-	
+function animate() {	
 	renderer.render(scene,camera);
 	requestAnimationFrame( animate );
 }
@@ -99,32 +143,61 @@ function buildClock(){
 	watch.add(clockMesh, sector);
 }
 
-function timing(){
+function timing1(){
 	if(!clockStart) return;
-	if(this.count === 1200){
-		this.count = 0;
+	if(!moveStyle){
+		setTimeout(timing2, 0);
+		return;
+	} 
+	if(count/20 === timeEnd){
+		count = 0;
+		timeEnd = 60;
+		$('#WhenToEnd').text(timeEnd + 's');
+		timeUp.play();
 		return;
 	}
 	
-	this.count = (this.count === undefined) ? 0 : this.count;
-	this.count += 1;
+	count += 1;
 	
-	watch.children[0].rotation.z -= Math.PI/600;
+	watch.children[0].rotation.z += Math.PI/600;
 	watch.children[1].rotation.z = watch.children[0].rotation.z;
-	$('#msg').text((this.count/20).toFixed() + 's');
+	$('#msg').text((count/20).toFixed() + 's');
 	
 	//sector animate
-	let tmp = this.count % 40;
+	let tmp = count % 40;
 	if(tmp < 10)
-		watch.children[1].rotation.z += tmp * Math.PI/300;
+		watch.children[1].rotation.z -= tmp * Math.PI/300;
 	else if(tmp < 20)
-		watch.children[1].rotation.z += (20 - tmp) * Math.PI/300;
+		watch.children[1].rotation.z -= (20 - tmp) * Math.PI/300;
 	else if(tmp < 30)
-		watch.children[1].rotation.z -= (tmp - 20) * Math.PI/300;
+		watch.children[1].rotation.z += (tmp - 20) * Math.PI/300;
 	else if(tmp < 40)
-		watch.children[1].rotation.z -= (40 - tmp) * Math.PI/300;
+		watch.children[1].rotation.z += (40 - tmp) * Math.PI/300;
 	
-	setTimeout(timing, 50);
+	setTimeout(timing1, 50);
+}
+
+function timing2(){
+	if(!clockStart) return;
+	if(moveStyle){
+		setTimeout(timing1, 0);
+		return;
+	} 
+	if(count/20 === timeEnd){
+		count = 0;
+		timeEnd = 60;
+		$('#WhenToEnd').text(timeEnd + 's');
+		timeUp.play();
+		return;
+	}
+	
+	count += 10;
+	
+	watch.children[0].rotation.z += Math.PI/60;
+	watch.children[1].rotation.z = watch.children[0].rotation.z;
+	$('#msg').text((count/20).toFixed() + 's');
+		
+	setTimeout(timing2, 500);
 }
 </script>
 
