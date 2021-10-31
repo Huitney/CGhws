@@ -17,24 +17,22 @@ export function init() {
 	camera.up.set(1, 0, 0);
 	camera.lookAt(0, 0, 0);
 	
-	thirdPVCamera = new THREE.OrthographicCamera(-window.innerWidth/32, window.innerWidth/32
-											, window.innerHeight/16, -window.innerHeight/16, 1, 10000);
+	thirdPVCamera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight/2, 1, 1000);
 	thirdPVCamera.position.set (-200,200,0);
 	
 	renderer = new THREE.WebGLRenderer({antialias: true});
 	renderer.setSize(window.innerWidth, window.innerHeight);
-	renderer.setClearColor(0x888888);
+	renderer.setClearColor('darkgray');
 	window.addEventListener('resize', onWindowResize, false);
 	document.body.appendChild(renderer.domElement);
 	let controls = new OrbitControls(camera, renderer.domElement);
-		
-	var gridXZ = new THREE.GridHelper(200, 20, 'red', 'white');
-    scene.add(gridXZ);
-	var axes = new THREE.AxesHelper(10);
-	scene.add(axes);
 	
 	let light = new THREE.PointLight(0x404040);
 	scene.add(light);
+	
+	var plane = new THREE.Mesh( new THREE.PlaneGeometry( 200, 200 ), new THREE.MeshBasicMaterial( {color: 0xd4d4d4, side: THREE.DoubleSide} ) );
+	plane.rotation.x = Math.PI/2;
+	scene.add( plane );
 	
 	car = buildCar();
 	obstacles = buildObstacle();

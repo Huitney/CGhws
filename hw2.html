@@ -19,6 +19,7 @@
 
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script src="https://jyunming-chen.github.io/tutsplus/js/KeyboardState.js"></script>
+<script src="https://cdn.socket.io/4.1.3/socket.io.js"></script>
 
 <script type ="module">
 javascript:(function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='https://mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);})()
@@ -27,13 +28,34 @@ javascript:(function(){var script=document.createElement('script');script.onload
 
 import * as THREE from "https://threejs.org/build/three.module.js";
 import { OrbitControls } from "https://threejs.org/examples/jsm/controls/OrbitControls.js";
-import {init, animate} from "./init-hw2.js";
+//import {init, animate, car} from "https://raw.githack.com/Huitney/CGhws/master/init-hw2.js";
+import {init, animate, car} from "./init-hw2.js";
 
 ( function() {
 	Math.clamp = function(val,min,max) {
 		return Math.min(Math.max(val,min),max);
 	} 
 })();
+
+var socket;
+
+//////////////////
+// when document.ready()    
+$(function () {
+	socket = io();
+
+	socket.on('angle sent', function(msg) {
+		car.theta = (msg / (Math.PI*3)) * (Math.PI/7) * 2;
+		console.log(msg, car.theta);
+	});
+	
+	socket.on('value sent', function(msg) {
+		let tmp = `${(msg*50).toFixed(0)}`;
+		car.speed = tmp;
+		console.log(tmp);
+	});
+
+});
 
 init();
 animate();

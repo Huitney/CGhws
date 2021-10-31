@@ -75,7 +75,8 @@ export function moveCar(deltaT){
 		}
 	}
 	
-	thirdPVCamera.position.copy(car.mesh.localToWorld(new THREE.Vector3(-20, 8, 0)));
+	thirdPVCamera.position.copy(car.mesh.localToWorld(new THREE.Vector3(-50, 30, 0)));
+	thirdPVCamera.lookAt (car.mesh.localToWorld (new THREE.Vector3(30,0,0)));
 	thirdPVCamera.lookAt(car.center);
 }
 

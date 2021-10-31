@@ -129,6 +129,7 @@ export class Obstacle {
 	}
 	
 	collision(pos, radius){
+		//console.log(pos.distanceTo(this.center) - this.radius - radius, pos.distanceTo(this.center), this.radius, radius)
 		if(pos.distanceTo(this.center) - this.radius - radius <= 0) return true;
 		else return false;
 	}
@@ -159,9 +160,8 @@ export function buildCar(){
 	let mesh = new THREE.Mesh( new THREE.ExtrudeGeometry( shape, extrudeSettings )
 							, new THREE.MeshPhongMaterial({color: 0x666666, transparent: true, opacity: 0.9, specular: 0x2d2d2d, shininess: 20})) ;
 	mesh.position.set(-12.5, 3, -4);
-	console.log(mesh.geometry.attributes)
 	
-	let car = new Car(new THREE.Vector3(0, 0, 0), [12, 6.5, 5], mesh);
+	let car = new Car(new THREE.Vector3(0, 0, 0), [12.5, 6.5, 5.5], mesh);
 	
 	return car;
 }
@@ -170,12 +170,12 @@ export function buildObstacle(){
 	
 	let obstacles = [];
 	for(var i = 0;i < 10; i++){
-		let radius = Math.floor(Math.random()*8)+2;
+		let radius = Math.floor(Math.random()*8)+3;
 		let height = Math.floor(Math.random()*20)+1;
-		let x = Math.random()*100-50;
-		let z = Math.random()*100-50;
-		let pos = new THREE.Vector3(x, 0, z);
-		if((x < 15 & x > -15) | (z < 15 & z > -15)){
+		let x = Math.random()*150-75;
+		let z = Math.random()*150-75;
+		let pos = new THREE.Vector3(x, height/2, z);
+		if((x < 20 & x > -20) | (z < 20 & z > -20)){
 			i--;
 			continue;
 		}
