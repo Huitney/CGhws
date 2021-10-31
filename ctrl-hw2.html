@@ -158,8 +158,9 @@ function init() {
 	dIcon.material.color.set('dimgrey');
 	
 	scene.add(gasIcon, brakeIcon, pIcon, rIcon, nIcon, dIcon);
-
-	updateTachometer (0.1);
+	
+	if(socket)
+		updateTachometer (0.1);
 }
 
 function onTouchStart(event) {
@@ -410,9 +411,10 @@ function animate() {
 	renderer.render(scene, camera);
 
 	dial.rotation.z = dialAngle;
-	updateTachometer (gasLevel); 
+	if(socket)
+		updateTachometer (gasLevel); 
 	
-	//
+	///////
 	gasIcon.material.color.set('dimgrey');
 	brakeIcon.material.color.set('dimgrey');
 	if(stillGassing) 
@@ -439,21 +441,15 @@ function makeTachometer () {
 }
 
 function updateTachometer (power) {
-
-	updateTachometer.idleSpeed = (updateTachometer.idleSpeed === undefined) ? false : updateTachometer.idleSpeed;
 	
 	tachometer.children[0].children[0].scale.x = power;
-	if(!updateTachometer.idleSpeed){
-		if(gear === 'p' | gear === 'n')
-			socket.emit ('value from ctrl', 0);
-		else if(gear === 'r')
-			socket.emit ('value from ctrl', -gasLevel);
-		else
-			socket.emit ('value from ctrl', gasLevel);
-	}
 	
-	if(gasLevel == 0.1) updateTachometer.idleSpeed = true;
-	else updateTachometer.idleSpeed = false;
+	if(gear === 'p' | gear === 'n')
+		socket.emit ('value from ctrl', 0);
+	else if(gear === 'r')
+		socket.emit ('value from ctrl', -gasLevel);
+	else
+		socket.emit ('value from ctrl', gasLevel);
 }
 
 function clamp (v, vLo, vHi) {

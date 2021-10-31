@@ -21,11 +21,11 @@ export function dDrive(deltaT){
     if (keyboard.pressed('left')){
 		car.theta += 0.01;  
 	}
-	if(!keyboard.pressed('left') & !keyboard.pressed('right')){
-		PDControl(deltaT);
-		if(car.theta.toFixed(5) == 0.0000)
-			car.theta = 0.0001;
-	}
+	//if(!keyboard.pressed('left') & !keyboard.pressed('right')){
+	//	PDControl(deltaT);
+	//	if(car.theta.toFixed(5) == 0.0000)
+	//		car.theta = 0.0001;
+	//}
     car.theta = Math.clamp (car.theta, -Math.PI/7, Math.PI/7);
 	
 	//////////////////////////////////////////////////////////////
