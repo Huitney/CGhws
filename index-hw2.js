@@ -1,4 +1,5 @@
-const app = require('express')();
+var express = require('express');
+var app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const port = process.env.PORT || 8080;
@@ -9,6 +10,9 @@ app.get('/', (req, res) => {
   console.log ('send index.html');
 });
 */
+
+//app.use('/static', express.static('public'));
+app.use("./static/",express.static('../public/'));
 
 app.get('/ctrl', (req, res) => {
 	res.sendFile(__dirname + '/ctrl-hw2.html');

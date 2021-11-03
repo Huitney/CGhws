@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+</title>
+<style>
+#heading{
+	text-align: center;
+	position:absolute;
+	width:100vw;
+}
+</style>
+</head>
+<body style='overflow:hidden'> 
+
+<div id='heading'>
+	<h3 style = "color:red">hw3</h3>
+	<button id='changeView'>change view</button>
+</div>
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<script type ="module">
+javascript:(function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='https://mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);})()
+
+import * as THREE from "https://threejs.org/build/three.module.js";
+import { OrbitControls } from "https://threejs.org/examples/jsm/controls/OrbitControls.js";
+// my script
+
+var camera, scene, renderer;
+var clock = new THREE.Clock();
+var changeView = false;
+var topCamera, frontCamera, sideCamera;
+
+init();
+animate();
+
+$("#changeView").click(function() {
+	changeView =! changeView;
+});
+
+function init() {
+	scene = new THREE.Scene();
+	////////
+	camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000);
+	camera.position.set (200,200,200);
+	///////
+	topCamera = new THREE.OrthographicCamera(window.innerWidth/-8,window.innerWidth/8, window.innerHeight/8, window.innerHeight/-8, 1, 1000 );
+	topCamera.position.y = 100;
+	topCamera.lookAt(0, 0, 0);
+	frontCamera = new THREE.OrthographicCamera(window.innerWidth/-8, window.innerWidth/8, window.innerHeight/8, window.innerHeight/-8, 1, 1000 );
+	frontCamera.position.z = 100;
+	frontCamera.lookAt(0, 0, 0);
+	sideCamera = new THREE.OrthographicCamera(window.innerWidth/-8, window.innerWidth/8, window.innerHeight/8, window.innerHeight/-8, 1, 1000 );
+	sideCamera.position.x = 100;
+	sideCamera.lookAt(0, 0, 0);
+	
+	renderer = new THREE.WebGLRenderer({antialias: true});
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	renderer.setClearColor(0x888888);
+	window.addEventListener('resize', onWindowResize, false);
+	document.body.appendChild(renderer.domElement);
+	let controls = new OrbitControls(camera, renderer.domElement);
+		
+	var gridXZ = new THREE.GridHelper(200, 20, 'red', 'white');
+    scene.add(gridXZ);
+	var axes = new THREE.AxesHelper(10);
+	scene.add(axes);
+	
+	var light = new THREE.PointLight( 0xffffff, 1, 1000 );
+	scene.add( light );
+	light.position.set(65, 50, 70)
+	
+	buildModel();
+}
+
+function onWindowResize() {
+	camera.aspect = window.innerWidth / window.innerHeight;
+	camera.updateProjectionMatrix();
+	renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+function animate() {
+	var dt = clock.getDelta();
+	
+	render();
+	requestAnimationFrame( animate );
+}
+
+function render() {
+	var ww = window.innerWidth;
+	var hh = window.innerHeight;
+  
+  var WW = window.innerWidth;
+	var HH = window.innerHeight;
+    renderer.setScissorTest( true );
+	
+	renderer.setViewport(0, 0, WW, HH);
+    renderer.setScissor(0, 0, WW, HH);
+	renderer.clear();
+
+	if(changeView){
+		renderer.setViewport (0,0, ww/2, hh/2);
+		renderer.setScissor (0,0, ww/2, hh/2);
+		renderer.render(scene, frontCamera);
+		  
+		renderer.setViewport (0,hh/2, ww/2, hh/2);
+		renderer.setScissor (0,hh/2, ww/2, hh/2);
+		renderer.render(scene, topCamera);
+		  
+		renderer.setViewport (ww/2,0, ww/2, hh/2);
+		renderer.setScissor (ww/2,0, ww/2, hh/2);
+		renderer.render(scene, sideCamera);
+
+		renderer.setViewport (ww/2,hh/2, ww/2, hh/2);
+		renderer.setScissor (ww/2,hh/2, ww/2, hh/2);
+		renderer.render(scene, camera);
+	}
+	else
+		renderer.render(scene, camera);
+	renderer.setScissorTest( false );
+}
+
+function buildModel(){
+	
+	var shape1 = new THREE.Shape();
+	shape1.moveTo( 0,0 );
+	shape1.lineTo( 0, 25 );
+	shape1.lineTo( 15, 25 );
+	shape1.lineTo( 15, 5 );
+	shape1.lineTo( 45, 5 );
+	shape1.lineTo( 45, 25 );
+	shape1.lineTo( 60, 25 );
+	shape1.lineTo( 60, 0 );
+	shape1.lineTo( 0, 0 );
+	var extrudeSetting1 = {
+		steps: 2,
+		depth: 13,
+		bevelEnabled: false
+	};
+	
+	var shape2 = new THREE.Shape();
+	shape2.moveTo( 0,0 );
+	shape2.lineTo( 0, 10 );
+	shape2.lineTo( 60, 10 );
+	for(let i = 0, j = Math.PI/2;i<50;i++, j+=Math.PI/100)
+		shape2.lineTo( 70-Math.sin(j)*10, 10+Math.cos(j)*10 );
+	shape2.lineTo( 0, 0 );
+	var extrudeSetting2 = {
+		steps: 2,
+		depth: 60,
+		bevelEnabled: false
+	};
+	
+	var shape3 = new THREE.Shape();
+	shape3.moveTo( 0,0 );
+	shape3.lineTo( 0, -60 );
+	shape3.lineTo( 100, -60 );
+	shape3.absarc( 100, -30, 30, Math.PI/2*3, Math.PI/2 );
+	shape3.lineTo( 100, 0 );
+	shape3.lineTo( 0, 0 );
+	
+	var holePath = new THREE.Path();
+	holePath.moveTo(111, -30);
+	holePath.absarc(100, -30, 11, 0, Math.PI * 2, true);
+	shape3.holes.push(holePath);
+	
+	var extrudeSetting3 = {
+		steps: 2,
+		depth: 15,
+		bevelEnabled: false
+	};
+	
+	/*
+	let loader = new THREE.TextureLoader();
+    loader.setCrossOrigin('');
+	
+    var materialArray = [];
+    materialArray.push(new THREE.MeshPhongMaterial({
+		alphaMap: loader.load ('https://i.imgur.com/6eAAMFJ.png'),
+		color: 0xff0000, shininess: 100, specular: 0x383838,
+		transparent: true, side: THREE.DoubleSide, alphaTest: 0.5
+	}));
+    materialArray.push(new THREE.MeshPhongMaterial({
+		alphaMap: loader.load ('https://i.imgur.com/6eAAMFJ.png'),
+		color: 0xff0000, shininess: 100, specular: 0x383838,
+		transparent: true, side: THREE.DoubleSide, alphaTest: 0.5
+	}));
+    materialArray.push(new THREE.MeshPhongMaterial({
+		alphaMap: loader.load ('https://i.imgur.com/6eAAMFJ.png'),
+		color: 0xff0000, shininess: 100, specular: 0x383838,
+		transparent: true, side: THREE.DoubleSide, alphaTest: 0.5
+	}));
+    materialArray.push(new THREE.MeshPhongMaterial({
+		alphaMap: loader.load ('https://i.imgur.com/6eAAMFJ.png'),
+		color: 0xff0000, shininess: 100, specular: 0x383838,
+		transparent: true, side: THREE.DoubleSide, alphaTest: 0.5
+	}));
+    materialArray.push(new THREE.MeshPhongMaterial({
+		alphaMap: loader.load ('https://i.imgur.com/LesbbM4.png'),
+		color: 0xff0000, shininess: 100, specular: 0x383838,
+		transparent: true, side: THREE.DoubleSide, alphaTest: 0.5
+	}));
+    materialArray.push(new THREE.MeshPhongMaterial({
+		alphaMap: loader.load ('https://i.imgur.com/LesbbM4.png'),
+		color: 0xff0000, shininess: 100, specular: 0x383838,
+		transparent: true, side: THREE.DoubleSide, alphaTest: 0.5
+	}));
+	*/
+	
+	var mesh1 = new THREE.Mesh( new THREE.ExtrudeGeometry( shape1, extrudeSetting1 ), new THREE.MeshPhongMaterial( { color: 0xff0000, shininess: 100, specular: 0x383838})) ;
+	mesh1.rotation.y = -Math.PI/2;
+	mesh1.position.set(13, 25, 0);
+	var mesh12 = mesh1.clone();
+	mesh12.position.set(60, 25, 0);
+	var mesh2 = new THREE.Mesh( new THREE.ExtrudeGeometry( shape2, extrudeSetting2 ), new THREE.MeshPhongMaterial( { color: 0xff0000, shininess: 100, specular: 0x383838})) ;
+	mesh2.position.y = 15;
+	var mesh3 = new THREE.Mesh( new THREE.ExtrudeGeometry( shape3, extrudeSetting3 ), new THREE.MeshPhongMaterial( { color: 0xff0000, shininess: 100, specular: 0x383838, side: THREE.DoubleSide}));
+	mesh3.rotation.x = -Math.PI/2;
+	
+	scene.add( mesh1, mesh12, mesh2, mesh3 );
+}
+</script>
+
+</body>
+</html>
