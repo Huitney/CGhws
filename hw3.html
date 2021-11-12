@@ -62,16 +62,12 @@ function init() {
 	document.body.appendChild(renderer.domElement);
 	let controls = new OrbitControls(camera, renderer.domElement);
 		
-	var gridXZ = new THREE.GridHelper(200, 20, 'red', 'white');
-    scene.add(gridXZ);
-	var axes = new THREE.AxesHelper(10);
-	scene.add(axes);
-	
 	var light = new THREE.PointLight( 0xffffff, 1, 1000 );
 	scene.add( light );
 	light.position.set(65, 50, 70)
 	
 	buildModel();
+	addFloor();
 }
 
 function onWindowResize() {
@@ -170,44 +166,7 @@ function buildModel(){
 		depth: 15,
 		bevelEnabled: false
 	};
-	
-	/*
-	let loader = new THREE.TextureLoader();
-    loader.setCrossOrigin('');
-	
-    var materialArray = [];
-    materialArray.push(new THREE.MeshPhongMaterial({
-		alphaMap: loader.load ('https://i.imgur.com/6eAAMFJ.png'),
-		color: 0xff0000, shininess: 100, specular: 0x383838,
-		transparent: true, side: THREE.DoubleSide, alphaTest: 0.5
-	}));
-    materialArray.push(new THREE.MeshPhongMaterial({
-		alphaMap: loader.load ('https://i.imgur.com/6eAAMFJ.png'),
-		color: 0xff0000, shininess: 100, specular: 0x383838,
-		transparent: true, side: THREE.DoubleSide, alphaTest: 0.5
-	}));
-    materialArray.push(new THREE.MeshPhongMaterial({
-		alphaMap: loader.load ('https://i.imgur.com/6eAAMFJ.png'),
-		color: 0xff0000, shininess: 100, specular: 0x383838,
-		transparent: true, side: THREE.DoubleSide, alphaTest: 0.5
-	}));
-    materialArray.push(new THREE.MeshPhongMaterial({
-		alphaMap: loader.load ('https://i.imgur.com/6eAAMFJ.png'),
-		color: 0xff0000, shininess: 100, specular: 0x383838,
-		transparent: true, side: THREE.DoubleSide, alphaTest: 0.5
-	}));
-    materialArray.push(new THREE.MeshPhongMaterial({
-		alphaMap: loader.load ('https://i.imgur.com/LesbbM4.png'),
-		color: 0xff0000, shininess: 100, specular: 0x383838,
-		transparent: true, side: THREE.DoubleSide, alphaTest: 0.5
-	}));
-    materialArray.push(new THREE.MeshPhongMaterial({
-		alphaMap: loader.load ('https://i.imgur.com/LesbbM4.png'),
-		color: 0xff0000, shininess: 100, specular: 0x383838,
-		transparent: true, side: THREE.DoubleSide, alphaTest: 0.5
-	}));
-	*/
-	
+		
 	var mesh1 = new THREE.Mesh( new THREE.ExtrudeGeometry( shape1, extrudeSetting1 ), new THREE.MeshPhongMaterial( { color: 0xff0000, shininess: 100, specular: 0x383838})) ;
 	mesh1.rotation.y = -Math.PI/2;
 	mesh1.position.set(13, 25, 0);
@@ -219,6 +178,33 @@ function buildModel(){
 	mesh3.rotation.x = -Math.PI/2;
 	
 	scene.add( mesh1, mesh12, mesh2, mesh3 );
+}
+
+function addFloor() {
+    var loader = new THREE.TextureLoader();
+    loader.load(
+    "https://i.imgur.com/7Jw5c1h.jpg",
+    function (texture) {
+        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat = new THREE.Vector2(3, 5);
+
+        var floorMaterial = new THREE.MeshBasicMaterial({
+            map: texture,
+            side: THREE.DoubleSide,
+        });
+
+        var floorGeometry = new THREE.PlaneGeometry(300, 300);
+
+        var floor = new THREE.Mesh(
+            floorGeometry,
+            floorMaterial
+        );
+
+        floor.position.y = -2;
+        floor.rotation.x = Math.PI / 2;
+        scene.add(floor);
+    }
+    );
 }
 </script>
 
