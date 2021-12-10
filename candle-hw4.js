@@ -30,7 +30,7 @@ export class Candle {
 		//console.log(c);
 		if (c.flameMesh!== undefined & c.mesh.picked === 0){
 			var texture = c.flameMesh.material.map;
-			c.light.visible = true;
+			c.light.power = 4*Math.PI;
 			c.flameMesh.visible = true;
 			//console.log (`${c.count}: [${texture.offset.x},${texture.offset.y}]`);
 			texture.offset.x += 1/3;

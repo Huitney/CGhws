@@ -72,7 +72,7 @@ function onPointerDown (event) {
 	
 	if (intersects.length > 0) {
 		if(intersects[0].object){
-			intersects[0].object.children[0].visible = false;
+			intersects[0].object.children[0].power = 0;
 			intersects[0].object.children[1].visible = false;
 			intersects[0].object.picked = 20;
 			//console.log(intersects[0].object)
