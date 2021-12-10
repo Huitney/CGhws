@@ -4,7 +4,7 @@ import { scene, candles, pickables } from "./main-hw4.js";
 export class Candle {
 	constructor(pos, flameMesh){
 		this.pos = pos;
-		this.mesh = new THREE.Mesh (new THREE.CylinderGeometry(5,5,20,6), new THREE.MeshNormalMaterial());
+		this.mesh = new THREE.Mesh (new THREE.CylinderGeometry(5,5,20,20), new THREE.MeshNormalMaterial());
 		this.mesh.position.copy(pos);
 		this.mesh.position.y = 10;
 		this.flameMesh = flameMesh;
