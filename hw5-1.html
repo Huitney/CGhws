@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+</title>
+<style>
+body {
+    background-color: #fff;
+    color: #111;
+    margin: 0px;
+    overflow: hidden;
+    font-family: Monospace;
+    font-size: 10px;
+    position: absolute;
+}
+
+#info {
+    text-align: center;
+	position:absolute;
+	width:100vw;
+}
+</style>
+</head>
+<body style='overflow:hidden'> 
+
+<div id="info"><br><font size="5" color="red">hw5-1</font></div>
+<script src="https://threejs.org/build/three.min.js"></script>
+<script src="https://threejs.org/examples/js/controls/OrbitControls.js">
+</script>
+<script src="http://jyunming-chen.github.io/tutsplus/js/KeyboardState.js"></script>
+
+<script id="myVertexShader" type="x-shader/x-vertex">
+    uniform vec3 lightpos;  // world coordinate
+    varying vec3 eyelightdir;
+    varying vec3 eyenormal;   
+    varying vec4 eyepos;
+    
+    void main() {
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+
+        eyepos = modelViewMatrix * vec4 (position, 1.0);
+        vec4 eyelightpos= viewMatrix * vec4 (lightpos, 1.0);
+        eyelightdir =  eyelightpos.xyz - eyepos.xyz;
+        eyenormal = normalMatrix * normal;
+    }
+</script>
+<script id="myFragmentShader" type="x-shader/x-fragment">
+    varying vec3 eyelightdir;
+    varying vec3 eyenormal;
+    varying vec4 eyepos;
+    
+    void main() {
+        float intensity = dot (normalize (eyenormal), normalize (eyelightdir));         if (intensity > 0.8)
+        	intensity = 0.8;
+        else if (intensity > 0.4)
+         	intensity = 0.4;
+        else
+          intensity = 0.0;
+        vec3 diffuse = intensity*vec3 (1,1,1);
+    
+        vec3 h = normalize(-normalize (eyepos.xyz) + normalize (eyelightdir));
+        float shininess = 40.;    
+        vec3 specular = pow (dot (eyenormal, h), shininess) *vec3 (1,0,0);
+        //gl_FragColor = vec4(diffuse + specular, 1.0);
+        gl_FragColor = vec4 (diffuse + vec3(0,0,0.13), 1.0);
+    }
+</script>
+
+<script type ="module">
+javascript:(function(){var script=document.createElement('script');script.onload=function(){var stats=new Stats();document.body.appendChild(stats.dom);requestAnimationFrame(function loop(){stats.update();requestAnimationFrame(loop)});};script.src='https://mrdoob.github.io/stats.js/build/stats.min.js';document.head.appendChild(script);})()
+
+import { init, animate } from './init-hw5-1.js';
+// my script
+
+init();
+animate();
+
+</script>
+</body>
+</html>

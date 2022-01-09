@@ -7,3 +7,4 @@
 * <a href="https://huitney.github.io/CGhws/hw2.html"><img src="https://i.imgur.com/0zrdapA.png" style="width:15px;height:15px;">HW2</a><br>
 * <a href="https://huitney.github.io/CGhws/hw3.html"><img src="https://i.imgur.com/0zrdapA.png" style="width:15px;height:15px;">HW3</a><br>
 * <a href="https://huitney.github.io/CGhws/hw4.html"><img src="https://i.imgur.com/0zrdapA.png" style="width:15px;height:15px;">HW4</a><br>
+* <a href="https://huitney.github.io/CGhws/hw5-1.html"><img src="https://i.imgur.com/0zrdapA.png" style="width:15px;height:15px;">HW5-1</a><br>
