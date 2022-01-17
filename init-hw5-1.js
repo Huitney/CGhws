@@ -4,8 +4,6 @@ import {teapots, buildTeapots} from "./teapos-hw5-1.js";
 
 var scene, renderer, camera;
 var pointLight;
-var keyboard = new KeyboardState();
-var turn = true;
 var angle = 0;
 
 export function init() {
@@ -44,10 +42,8 @@ export function init() {
 }
 
 export function animate() {
-    keyboard.update();
     
-    if (keyboard.down("Z")) turn = !turn;    
-    if (turn) angle += 0.01;
+    angle += 0.01;
     
     pointLight.position.set(50 * Math.cos(angle), 80, 50 * Math.sin(angle));   
 	
