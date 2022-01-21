@@ -1,5 +1,5 @@
 import * as THREE from "https://threejs.org/build/three.module.js";
-import { TeapotGeometry } from 'https://raw.githack.com/mrdoob/three.js/dev/examples/jsm/geometries/TeapotGeometry.js';
+import { TeapotGeometry } from "https://threejs.org/examples/jsm/geometries/TeapotGeometry.js";
 import {scene, sceneRTT} from "./init-hw5-2.js";
 
 var teapots = [];
